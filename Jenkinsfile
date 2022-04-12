@@ -1,7 +1,9 @@
 // Declarative //
 pipeline {
     agent any
-
+    environment {
+        EMAIL_RECIPIENTS = 'nasruddinkhan44@gmaiil.com'
+    }
     stages {
         stage('Build') {
             steps {
@@ -10,7 +12,11 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+               bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
+                                       def pom = readMavenPom file: 'pom.xml'
+                                       print pom.version
+                                       junit '**//*target/surefire-reports/TEST-*.xml'
+                                       archive 'target*//*.jar'
             }
         }
         stage('Deploy') {
