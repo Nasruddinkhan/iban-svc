@@ -18,10 +18,17 @@ pipeline {
                 bat "mvn test"
             }
         }
-        stage('Deploy') {
+        stage('package stage') {
             steps {
                 echo 'Deploying....'
                  bat "mvn package"
+            }
+        }
+        stage('result') {
+            steps {
+                input('Do you want capture result....')
+                 junit "**/target/surefire-reports/Test.*.xml"
+                 archive 'target/*.jar'
             }
         }
     }
