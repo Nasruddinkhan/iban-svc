@@ -5,18 +5,17 @@ pipeline {
         EMAIL_RECIPIENTS = 'nasruddinkhan44@gmaiil.com'
     }
     stages {
-        stage('Build') {
+        stage('Clean') {
             steps {
-                echo 'Building..'
+                echo 'Clean..'
+                bat "mvn clean"
+
             }
         }
         stage('Test') {
             steps {
-               bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
-                                       def pom = readMavenPom file: 'pom.xml'
-                                       print pom.version
-                                       junit '**//*target/surefire-reports/TEST-*.xml'
-                                       archive 'target*//*.jar'
+                echo 'Testing..'
+                bat "mvn test"
             }
         }
         stage('Deploy') {
